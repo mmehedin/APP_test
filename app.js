@@ -1,27 +1,16 @@
-var express    = require('express');        // call express
-var app        = express();                 // define our app using express
+var express = require('express');
+var path = require('path');
 var bodyParser = require('body-parser');
+var mongodb = require('mongodb');
+var ObjectID = mongodb.ObjectID;
 
-var mongoose   = require('mongoose');
+var CONTACTS_COLLECTION = 'contacts';
 
-
-var options = { server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } }, 
-                replset: { socketOptions: { keepAlive: 1, connectTimeoutMS : 30000 } } };
-
-//mongoose.connect('mongodb://bridges:bridges@ds017678.mlab.com:17678/usgs', options); //connect to our database
-//mongoose.connect('mongodb://node:node@novus.modulusmongo.net:27017/Iganiq8o'); 
-
-
-var Bear     = require('./models/bear');
-
-// configure app to use bodyParser()
-// this will let us get the data from a POST
-app.use(bodyParser.urlencoded({ extended: true }));
+var app = express();
+app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
 
-//var port = process.env.PORT || 8080;        // set our port
-
-var mongodb = require("mongodb");
+// Create a database variable outside of the database connection callback to reuse the connection pool in your app.
 var db;
 
 // Connect to the database before starting the application server.
@@ -33,104 +22,43 @@ mongodb.MongoClient.connect(process.env.MONGOLAB_URI, function (err, database) {
 
   // Save database object from the callback for reuse.
   db = database;
-  console.log("Database connection ready");
-var port;
+  console.log('Database connection ready');
+
   // Initialize the app.
   var server = app.listen(process.env.PORT || 8080, function () {
-    port = server.address().port;
-    console.log("App now running on port", port);
+    var port = server.address().port;
+    console.log('App now running on port', port);
   });
-
-
-
-
-
-
-
-
-
-
-
-
-// ROUTES FOR OUR API
-// =============================================================================
-var router = express.Router();              // get an instance of the express Router
-
-// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
-router.get('/', function(req, res) {
-    res.json({ message: 'hooray! welcome to our api!' });   
 });
 
-// more routes for our API will happen here
+// Generic error handler used by all endpoints.
+function handleError(reason, message, code) {
+  console.log("ERROR: " + reason);
+  res.status(code || 500).json({"error": message});
+}
 
-// REGISTER OUR ROUTES -------------------------------
-// all of our routes will be prefixed with /api
-app.use('/api', router);
+/*  "/contacts"
+ *    GET: finds all contacts
+ *    POST: creates a new contact
+ */
 
-// START THE SERVER
-// =============================================================================
-app.listen(port);
-console.log('Magic happens on port ' + port);
-
-//ADDING THE DATABASE
-//==========================
-
-
-
-
-// ROUTES FOR OUR API
-// =============================================================================
-var router = express.Router();              // get an instance of the express Router
-
-// middleware to use for all requests
-router.use(function(req, res, next) {
-    // do logging
-    console.log('Something is happening.');
-    next(); // make sure we go to the next routes and don't stop here
+app.get("/contacts", function(req, res) {
 });
 
-// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
-router.get('/', function(req, res) {
-    res.json({ message: 'hooray! welcome to our api!' });   
+app.post("/contacts", function(req, res) {
 });
 
-// more routes for our API will happen here
+/*  "/contacts/:id"
+ *    GET: find contact by id
+ *    PUT: update contact by id
+ *    DELETE: deletes contact by id
+ */
 
-// on routes that end in /bears
-// ----------------------------------------------------
-router.route('/bears')
+app.get("/contacts/:id", function(req, res) {
+});
 
-    // create a bear (accessed at POST http://localhost:8080/api/bears)
-    .post(function(req, res) {
-        
-        var bear = new Bear();      // create a new instance of the Bear model
-        bear.name = req.body.name;  // set the bears name (comes from the request)
-	console.log(bear);
-        // save the bear and check for errors
-        bear.save(function(err) {
-            if (err)
-                res.send(err);
+app.put("/contacts/:id", function(req, res) {
+});
 
-            res.json({ message: 'Bear created!' });
-        });
-        
-    })
-
-	// get all the bears (accessed at GET http://localhost:8080/api/bears)
-    .get(function(req, res) {
-        Bear.find(function(err, bears) {
-            if (err)
-                res.send(err);
-
-            res.json(bears);
-        });
-    });
-
-
-
-
-
-// REGISTER OUR ROUTES -------------------------------
-// all of our routes will be prefixed with /api
-app.use('/api', router);
-
+app.delete("/contacts/:id", function(req, res) {
+});
