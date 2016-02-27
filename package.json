@@ -1,6 +1,6 @@
 {
     "name": "USGS_earthquakes",
-    "main": “server.js",
+    "main": "server.js",
     "dependencies": {
         "express": "~4.13.1",
         "mongoose": "~3.6.13",
