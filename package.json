@@ -1,5 +1,5 @@
 {
-    "name": "USGS_earthquakes",
+    "name": "node-api",
     "main": "app.js",
     "dependencies": {
         "express": "~4.13.1",

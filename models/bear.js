@@ -2,9 +2,9 @@ var mongoose     = require('mongoose');
 var Schema       = mongoose.Schema;
 
 var BearSchema   = new Schema({
-	String: {
-        "$oid": String
-    },
+//	String: {
+ //       "$oid": String
+ //   },
     name: String
 });
 
