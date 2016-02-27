@@ -8,7 +8,7 @@ var mongoose   = require('mongoose');
 var options = { server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } }, 
                 replset: { socketOptions: { keepAlive: 1, connectTimeoutMS : 30000 } } };
 
-mongoose.connect('mongodb://bridges:bridges@ds017678.mlab.com:17678/usgs', options); //connect to our database
+//mongoose.connect('mongodb://bridges:bridges@ds017678.mlab.com:17678/usgs', options); //connect to our database
 //mongoose.connect('mongodb://node:node@novus.modulusmongo.net:27017/Iganiq8o'); 
 
 
@@ -19,7 +19,38 @@ var Bear     = require('./models/bear');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-var port = process.env.PORT || 8080;        // set our port
+//var port = process.env.PORT || 8080;        // set our port
+
+var mongodb = require("mongodb");
+var db;
+
+// Connect to the database before starting the application server.
+mongodb.MongoClient.connect(process.env.MONGOLAB_URI, function (err, database) {
+  if (err) {
+    console.log(err);
+    process.exit(1);
+  }
+
+  // Save database object from the callback for reuse.
+  db = database;
+  console.log("Database connection ready");
+var port;
+  // Initialize the app.
+  var server = app.listen(process.env.PORT || 8080, function () {
+    port = server.address().port;
+    console.log("App now running on port", port);
+  });
+
+
+
+
+
+
+
+
+
+
+
 
 // ROUTES FOR OUR API
 // =============================================================================
